@@ -1,0 +1,20 @@
+{% extends 'recetas/base.html' %}
+
+{% block title %}Detalle de receta{% endblock %}
+
+{% block content %}
+<div class="card">
+    {% if receta.imagen %}
+    <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}">
+    {% endif %}
+    <div class="card-body">
+        <h2 class="card-title">{{ receta.titulo }}</h2>
+        <p class="card-text"><strong>Descripción:</strong> {{ receta.descripcion }}</p>
+        <p><strong>Ingredientes:</strong></p>
+        <p>{{ receta.ingredientes|linebreaks }}</p>
+        <p><strong>Instrucciones:</strong></p>
+        <p>{{ receta.instrucciones|linebreaks }}</p>
+        <p class="text-muted">Publicado el {{ receta.fecha_creacion|date:"d M Y H:i" }}</p>
+    </div>
+</div>
+{% endblock %}

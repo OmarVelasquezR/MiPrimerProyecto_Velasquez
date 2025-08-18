@@ -37,7 +37,7 @@ def crear_receta(request):
     return render(request, 'recetas/crear_receta.html', {'form': form})
 
 
-# Vista para editar
+# Vista para editar receta
 @login_required
 def editar_receta(request, pk):
     receta = get_object_or_404(Receta, pk=pk)
@@ -50,7 +50,7 @@ def editar_receta(request, pk):
         form = RecetaForm(instance=receta)
     return render(request, 'recetas/editar_receta.html', {'form': form, 'receta': receta})
 
-# Vista para eliminar
+# Vista para eliminar receta
 @login_required
 def eliminar_receta(request, pk):
     receta = get_object_or_404(Receta, pk=pk)
@@ -69,4 +69,9 @@ def perfil_usuario(request):
 def mis_recetas(request):
     recetas = Receta.objects.filter(autor=request.user)
     return render(request, 'recetas/mis_recetas.html', {'recetas': recetas})
+
+# Vista para editar perfil de usuario
+@login_required
+def editar_perfil(request):
+    return render(request, 'recetas/editar_perfil.html')
 

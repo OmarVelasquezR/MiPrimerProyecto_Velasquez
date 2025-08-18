@@ -1,5 +1,39 @@
 {% extends 'recetas/base.html' %}
+{% load static %}
+
+{% block title %}Mi perfil{% endblock %}
+
 {% block content %}
-  <h2>Mi perfil</h2>
-  <p>Aquí podrás editar tus datos de usuario en el futuro.</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center">
+          <!-- Avatar del usuario -->
+          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Avatar" class="rounded-circle mb-3"
+            width="120" height="120">
+
+          <!-- Nombre de usuario -->
+          <h3 class="fw-bold">{{ user.first_name|default:user.username }}</h3>
+
+          <!-- Correo -->
+          <p class="text-muted mb-1">
+            <i class="bi bi-envelope"></i> {{ user.email }}
+          </p>
+
+          <!-- Fecha de registro -->
+          <p class="text-muted mb-3">
+            <i class="bi bi-calendar-check"></i>
+            Miembro desde el {{ user.date_joined|date:"d M Y" }}
+          </p>
+
+          <!-- Botón para editar perfil -->
+          <a href="{% url 'editar_perfil' %}" class="btn btn-outline-primary">
+            Editar perfil
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django import forms
 from .models import Receta
+from .models import Perfil
 
 class RecetaForm(forms.ModelForm):
     class Meta:
@@ -19,3 +20,9 @@ class RecetaForm(forms.ModelForm):
                 'rows': 8
             }),
         }
+
+# Formulario para editar el perfil de usuario
+class PerfilForm(forms.ModelForm):
+    class Meta:
+        model = Perfil
+        fields = ['avatar', 'biografia']

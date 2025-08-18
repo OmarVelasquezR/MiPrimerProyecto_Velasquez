@@ -6,46 +6,49 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2>Editar receta</h2>
-  <form method="POST" enctype="multipart/form-data" class="mt-4">
+  <h2 class="mb-4">Editar receta</h2>
+
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div class="mb-3">
-      <label for="{{ form.titulo.id_for_label }}" class="form-label">Título</label>
+    <div class="mb-4">
+      <h5 class="fw-bold">Título</h5>
       {{ form.titulo|add_class:"form-control" }}
     </div>
 
-    <div class="mb-3">
-      <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción</label>
+    <div class="mb-4">
+      <h5 class="fw-bold">Descripción</h5>
       {{ form.descripcion|add_class:"form-control" }}
+      <small class="text-muted">Ejemplo: Delicioso pollo al horno con vegetales...</small>
     </div>
 
-    <div class="mb-3">
-      <label for="{{ form.ingredientes.id_for_label }}" class="form-label">Ingredientes</label>
+    <div class="mb-4">
+      <h5 class="fw-bold">Ingredientes</h5>
       {{ form.ingredientes|add_class:"form-control" }}
-      <div class="form-text">Escribe un ingrediente por línea (ej. Pollo, Tomate, Sal...)</div>
+      <small class="text-muted">Escribe un ingrediente por línea (ej. Pollo, Tomate, Sal...)</small>
     </div>
 
-    <div class="mb-3">
-      <label for="{{ form.instrucciones.id_for_label }}" class="form-label">Instrucciones</label>
+    <div class="mb-4">
+      <h5 class="fw-bold">Instrucciones</h5>
       {{ form.instrucciones|add_class:"form-control" }}
-      <div class="form-text">Escribe una instrucción por línea</div>
+      <small class="text-muted">Escribe una instrucción por línea</small>
     </div>
 
-    <div class="mb-3">
-      <label for="{{ form.imagen.id_for_label }}" class="form-label">Imagen actual:</label><br>
-      {% if receta.imagen %}
-        <img src="{{ receta.imagen.url }}" class="img-fluid mb-2" style="max-height: 200px;">
+    <div class="mb-4">
+      <h5 class="fw-bold">Imagen actual:</h5>
+      {% if form.instance.imagen %}
+        <img src="{{ form.instance.imagen.url }}" alt="Imagen actual" class="img-thumbnail mb-3" style="max-width: 300px;">
       {% else %}
-        <p>No hay imagen.</p>
+        <p class="text-muted">No hay imagen cargada.</p>
       {% endif %}
-      <br>
-      <label for="{{ form.imagen.id_for_label }}" class="form-label">Cambiar imagen</label>
-      {{ form.imagen }}
+      <h5 class="fw-bold mt-3">Cambiar imagen</h5>
+      {{ form.imagen|add_class:"form-control" }}
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-    <a href="{% url 'lista_recetas' %}" class="btn btn-secondary">Cancelar</a>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      <a href="{% url 'lista_recetas' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
   </form>
 </div>
 {% endblock %}

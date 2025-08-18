@@ -28,11 +28,14 @@ def crear_receta(request):
     if request.method == 'POST':
         form = RecetaForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            receta = form.save(commit=False)
+            receta.autor = request.user
+            receta.save()
             return redirect('lista_recetas')
     else:
         form = RecetaForm()
     return render(request, 'recetas/crear_receta.html', {'form': form})
+
 
 # Vista para editar
 @login_required
@@ -64,5 +67,6 @@ def perfil_usuario(request):
 # Vista de mis recetas
 @login_required
 def mis_recetas(request):
-    return render(request, 'recetas/mis_recetas.html')
+    recetas = Receta.objects.filter(autor=request.user)
+    return render(request, 'recetas/mis_recetas.html', {'recetas': recetas})
 

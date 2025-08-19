@@ -1,6 +1,8 @@
 from django import forms
 from .models import Receta
 from .models import Perfil
+from django_countries.widgets import CountrySelectWidget
+
 
 class RecetaForm(forms.ModelForm):
     class Meta:
@@ -32,6 +34,7 @@ class PerfilForm(forms.ModelForm):
         ]
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'pais': CountrySelectWidget(attrs={'class': 'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):

@@ -4,10 +4,14 @@ from django.dispatch import receiver
 from .models import Perfil
 
 @receiver(post_save, sender=User)
-def crear_perfil_usuario(sender, instance, created, **kwargs):
+def crear_o_actualizar_perfil_usuario(sender, instance, created, **kwargs):
     if created:
-        Perfil.objects.create(usuario=instance)
-
-@receiver(post_save, sender=User)
-def guardar_perfil_usuario(sender, instance, **kwargs):
-    instance.perfil.save()
+        # Solo crear el perfil si no existe
+        if not hasattr(instance, 'perfil'):
+            Perfil.objects.create(usuario=instance)
+    else:
+        # Solo guardar si el perfil ya existe
+        try:
+            instance.perfil.save()
+        except Perfil.DoesNotExist:
+            Perfil.objects.create(usuario=instance)

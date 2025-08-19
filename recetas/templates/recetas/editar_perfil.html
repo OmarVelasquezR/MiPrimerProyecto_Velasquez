@@ -5,24 +5,37 @@
 {% block title %}Editar perfil{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4">Editar perfil</h2>
+<div class="container my-5">
+  <h2 class="mb-4 text-center text-md-start">Editar perfil</h2>
 
   <form method="POST" enctype="multipart/form-data" class="row g-4">
     {% csrf_token %}
 
-    <div class="col-md-4 text-center">
-      {% if user.perfil.avatar %}
-        <img src="{{ user.perfil.avatar.url }}" alt="Avatar" class="img-thumbnail rounded-circle" width="150">
-      {% else %}
-        <img src="{% static 'images/default-avatar.png' %}" alt="Avatar por defecto" class="img-thumbnail rounded-circle" width="150">
-      {% endif %}
-      <div class="mt-2">
-        {{ form.avatar|add_class:"form-control" }}
+    <!-- AVATAR CON VISTA PREVIA -->
+    <div class="col-12 col-md-4 d-flex justify-content-center align-items-start">
+      <div class="text-center position-relative">
+        <!-- Imagen de avatar -->
+        <img 
+          id="avatarPreview"
+          src="{% if user.perfil.avatar %}{{ user.perfil.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+          alt="Avatar" 
+          class="rounded-circle border shadow mb-2"
+          style="width: 150px; height: 150px; object-fit: cover;"
+        >
+
+        <!-- Botón de lápiz -->
+        <label for="id_avatar" class="btn btn-light border rounded-circle shadow-sm position-absolute bottom-0 start-50 translate-middle-x" style="width: 35px; height: 35px; padding: 4px; cursor: pointer;">
+          <i class="bi bi-pencil-fill"></i>
+        </label>
+
+        <!-- Input oculto -->
+        <input type="file" name="avatar" id="id_avatar" class="d-none" accept="image/*">
       </div>
     </div>
 
-    <div class="col-md-8">
+    <!-- FORMULARIO -->
+    <div class="col-12 col-md-8">
+
       <div class="mb-3">
         <label class="form-label fw-bold">Biografía</label>
         {{ form.biografia|add_class:"form-control" }}
@@ -30,12 +43,14 @@
 
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label class="form-label fw-bold">Ciudad</label>
-          {{ form.ciudad|add_class:"form-control" }}
+          <label class="form-label fw-bold">País</label>
+          <div class="country-no-flag">
+            {{ form.pais|add_class:"form-select" }}
+          </div>
         </div>
         <div class="col-md-6 mb-3">
-          <label class="form-label fw-bold">País</label>
-          {{ form.pais|add_class:"form-control" }}
+          <label class="form-label fw-bold">Ciudad</label>
+          {{ form.ciudad|add_class:"form-control" }}
         </div>
       </div>
 
@@ -75,11 +90,30 @@
         </div>
       </div>
 
-      <div class="mt-4">
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      <!-- BOTONES -->
+      <div class="mt-4 text-center text-md-start">
+        <button type="submit" class="btn btn-primary me-2">Guardar cambios</button>
         <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
       </div>
     </div>
   </form>
 </div>
+
+<!-- JS para vista previa del avatar -->
+<script>
+  document.getElementById('id_avatar').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const preview = document.getElementById('avatarPreview');
+      preview.src = URL.createObjectURL(file);
+    }
+  });
+</script>
+
+<!-- CSS para ocultar el ícono roto de bandera -->
+<style>
+  .country-no-flag img {
+    display: none !important;
+  }
+</style>
 {% endblock %}

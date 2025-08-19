@@ -1,0 +1,42 @@
+/* NAVBAR */
+.navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.dropdown-menu {
+    border-radius: 0.5rem;
+}
+
+/* FOOTER */
+footer {
+    background-color: #212529;
+}
+
+footer h5 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+footer p, footer li {
+    font-size: 0.95rem;
+}
+
+footer .bi {
+    font-size: 1.2rem;
+}
+
+footer .text-light:hover {
+    color: #ffc107;
+}
+
+/* GENERAL */
+body {
+    background-color: #f8f9fa;
+}

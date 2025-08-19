@@ -25,4 +25,22 @@ class RecetaForm(forms.ModelForm):
 class PerfilForm(forms.ModelForm):
     class Meta:
         model = Perfil
-        fields = ['avatar', 'biografia']
+        fields = [
+            'avatar', 'biografia', 'ciudad', 'pais', 'telefono',
+            'fecha_nacimiento', 'ocupacion', 'sitio_web',
+            'instagram', 'facebook', 'twitter'
+        ]
+        widgets = {
+            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(PerfilForm, self).__init__(*args, **kwargs)
+        
+        self.fields['avatar'].label = "Foto de perfil"
+
+        avatar_field = self.fields.get('avatar')
+        if avatar_field and hasattr(avatar_field.widget, 'clear_checkbox_label'):
+            avatar_field.widget.clear_checkbox_label = "Eliminar imagen"
+            avatar_field.widget.initial_text = "Imagen actual"
+            avatar_field.widget.input_text = "Cambiar"

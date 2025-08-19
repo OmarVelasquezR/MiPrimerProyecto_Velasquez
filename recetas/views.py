@@ -3,6 +3,7 @@ from .models import Receta
 from django.contrib.auth.decorators import login_required
 from .forms import RecetaForm
 from django.shortcuts import render
+from .forms import PerfilForm
 
 # Vista de inicio
 def inicio(request):
@@ -73,5 +74,14 @@ def mis_recetas(request):
 # Vista para editar perfil de usuario
 @login_required
 def editar_perfil(request):
-    return render(request, 'recetas/editar_perfil.html')
+    perfil = request.user.perfil
 
+    if request.method == 'POST':
+        form = PerfilForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            return redirect('perfil')
+    else:
+        form = PerfilForm(instance=perfil)
+
+    return render(request, 'recetas/editar_perfil.html', {'form': form})

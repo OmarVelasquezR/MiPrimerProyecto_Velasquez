@@ -1,8 +1,85 @@
 {% extends 'recetas/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
 {% block title %}Editar perfil{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-  <h2>Editar perfil</h2>
-  <p>Aquí va el formulario para editar el perfil del usuario.</p>
+  <h2 class="mb-4">Editar perfil</h2>
+
+  <form method="POST" enctype="multipart/form-data" class="row g-4">
+    {% csrf_token %}
+
+    <div class="col-md-4 text-center">
+      {% if user.perfil.avatar %}
+        <img src="{{ user.perfil.avatar.url }}" alt="Avatar" class="img-thumbnail rounded-circle" width="150">
+      {% else %}
+        <img src="{% static 'images/default-avatar.png' %}" alt="Avatar por defecto" class="img-thumbnail rounded-circle" width="150">
+      {% endif %}
+      <div class="mt-2">
+        {{ form.avatar|add_class:"form-control" }}
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="mb-3">
+        <label class="form-label fw-bold">Biografía</label>
+        {{ form.biografia|add_class:"form-control" }}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Ciudad</label>
+          {{ form.ciudad|add_class:"form-control" }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">País</label>
+          {{ form.pais|add_class:"form-control" }}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Teléfono</label>
+          {{ form.telefono|add_class:"form-control" }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Fecha de nacimiento</label>
+          {{ form.fecha_nacimiento|add_class:"form-control" }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Ocupación</label>
+        {{ form.ocupacion|add_class:"form-control" }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Sitio web</label>
+        {{ form.sitio_web|add_class:"form-control" }}
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label fw-bold">Instagram</label>
+          {{ form.instagram|add_class:"form-control" }}
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label fw-bold">Facebook</label>
+          {{ form.facebook|add_class:"form-control" }}
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label fw-bold">Twitter</label>
+          {{ form.twitter|add_class:"form-control" }}
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </div>
+  </form>
 </div>
 {% endblock %}

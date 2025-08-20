@@ -1,6 +1,6 @@
 /* NAVBAR */
 .navbar {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(255, 9, 9, 0.1);
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
 }
@@ -32,7 +32,7 @@ footer .bi {
     font-size: 1.2rem;
 }
 
-footer .text-light:hover {
+footer .container .text-light:hover {
     color: #ffc107;
 }
 
@@ -41,3 +41,13 @@ body {
     background-color: #f8f9fa;
 }
 
+/* Hover para las tarjetas de recetas */
+.receta-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.receta-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}

@@ -68,8 +68,8 @@ def perfil_usuario(request):
 # Vista de mis recetas
 @login_required
 def mis_recetas(request):
-    recetas = Receta.objects.filter(autor=request.user)
-    return render(request, 'recetas/mis_recetas.html', {'recetas': recetas})
+    recetas_usuario = Receta.objects.filter(autor=request.user).order_by('-fecha_creacion')
+    return render(request, 'recetas/mis_recetas.html', {'recetas': recetas_usuario})
 
 # Vista para editar perfil de usuario
 @login_required

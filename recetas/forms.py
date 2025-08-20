@@ -1,8 +1,6 @@
 from django import forms
-from .models import Receta
-from .models import Perfil
+from .models import Receta, Perfil
 from django_countries.widgets import CountrySelectWidget
-
 
 class RecetaForm(forms.ModelForm):
     class Meta:

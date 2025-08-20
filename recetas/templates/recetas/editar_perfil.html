@@ -15,16 +15,15 @@
     <div class="col-12 col-md-4 d-flex justify-content-center align-items-start">
       <div class="text-center position-relative">
         <!-- Imagen de avatar -->
-        <img 
-          id="avatarPreview"
-          src="{% if user.perfil.avatar %}{{ user.perfil.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-          alt="Avatar" 
-          class="rounded-circle border shadow mb-2"
-          style="width: 150px; height: 150px; object-fit: cover;"
-        >
+        <img id="avatarPreview"
+          src="{% if user.perfil.avatar %}{{ user.perfil.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}"
+          alt="Avatar" class="rounded-circle border shadow mb-2"
+          style="width: 150px; height: 150px; object-fit: cover;">
 
         <!-- Botón de lápiz -->
-        <label for="id_avatar" class="btn btn-light border rounded-circle shadow-sm position-absolute bottom-0 start-50 translate-middle-x" style="width: 35px; height: 35px; padding: 4px; cursor: pointer;">
+        <label for="id_avatar"
+          class="btn btn-light border rounded-circle shadow-sm position-absolute bottom-0 start-50 translate-middle-x"
+          style="width: 35px; height: 35px; padding: 4px; cursor: pointer;">
           <i class="bi bi-pencil-fill"></i>
         </label>
 
@@ -91,8 +90,9 @@
       </div>
 
       <!-- BOTONES -->
-      <div class="mt-4 text-center text-md-start">
-        <button type="submit" class="btn btn-primary me-2">Guardar cambios</button>
+      <div class="mt-4">
+        <a href="{% url 'cambiar_contrasena' %}" class="btn btn-warning">Cambiar contraseña</a>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
         <a href="{% url 'perfil' %}" class="btn btn-secondary">Cancelar</a>
       </div>
     </div>

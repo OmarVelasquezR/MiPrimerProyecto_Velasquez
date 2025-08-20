@@ -19,7 +19,14 @@ class ListaRecetasView(ListView):
     model = Receta
     template_name = 'recetas/lista_recetas.html'
     context_object_name = 'recetas'
-    ordering = ['-id']
+    paginate_by = 6  # si estás usando paginación
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        consulta = self.request.GET.get('q')
+        if consulta:
+            queryset = queryset.filter(titulo__icontains=consulta)
+        return queryset
 
 # Vista de detalle de receta
 class DetalleRecetaView(DetailView):

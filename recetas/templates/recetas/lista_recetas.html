@@ -4,6 +4,12 @@
 {% block content %}
 <div class="container py-4">
     <h2 class="mb-4">Todas las recetas publicadas</h2>
+    <form method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Buscar recetas por título..." value="{{ request.GET.q }}">
+        <button class="btn btn-dark" type="submit">Buscar</button>
+    </div>
+    </form>
 
     {% if recetas %}
     <div class="row row-cols-1 row-cols-md-3 g-4">

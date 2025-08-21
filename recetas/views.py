@@ -2,24 +2,24 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Receta
 from django.contrib.auth.decorators import login_required
 from .forms import RecetaForm, PerfilForm
-from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from recetas.models import Receta
 
 # Vista de inicio
 def inicio(request):
-    return render(request, 'recetas/inicio.html')
+    recetas_recientes = Receta.objects.order_by('-fecha_creacion')[:6]
+    return render(request, 'recetas/inicio.html', {'recetas_recientes': recetas_recientes})
 
-# Vista "Acerca de mí"
+# Vista "About"
 def acerca_de_mi(request):
     return render(request, 'recetas/about.html')
 
-# Vista de listado de recetas
+# Vista de todas las recetas
 class ListaRecetasView(ListView):
     model = Receta
     template_name = 'recetas/lista_recetas.html'
     context_object_name = 'recetas'
-    paginate_by = 6  # si estás usando paginación
 
     def get_queryset(self):
         queryset = super().get_queryset()

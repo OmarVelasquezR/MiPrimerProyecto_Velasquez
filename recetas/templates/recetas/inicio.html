@@ -1,6 +1,42 @@
 {% extends 'recetas/base.html' %}
+{% load static %}
 {% block title %}Inicio - Smart Food{% endblock %}
+
 {% block content %}
-<h1>Bienvenido a Smart Food</h1>
-<p>Tu sitio de recetas saludables y deliciosas.</p>
+
+<!-- HERO -->
+<section class="hero position-relative text-white text-center mb-5 w-100"style="background: url('{% static 'images/hero.jpg' %}') center/cover no-repeat; height: 400px;">
+    <div class="position-absolute top-50 start-50 translate-middle w-75">
+        <h1 class="display-4 fw-bold text-shadow">Descubre tu próxima receta saludable</h1>
+        <form method="get" action="{% url 'lista_recetas' %}" class="mt-4">
+            <div class="input-group input-group-lg">
+                <input type="text" name="q" class="form-control" placeholder="Buscar recetas..." aria-label="Buscar recetas">
+                <button class="btn btn-warning text-dark fw-bold" type="submit">Buscar</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- ÚLTIMAS RECETAS -->
+<section class="container">
+    <h2 class="text-center mb-4 fw-bold text-dark">Últimas recetas añadidas</h2>
+    <div class="row g-4">
+        {% for receta in recetas_recientes %}
+        <div class="col-md-4">
+            <a href="{% url 'detalle_receta' receta.id %}" class="text-decoration-none text-dark">
+                <div class="card h-100 shadow-sm receta-card transition-hover">
+                    {% if receta.imagen %}
+                    <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ receta.titulo }}</h5>
+                        <p class="card-text">{{ receta.descripcion|truncatechars:100 }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

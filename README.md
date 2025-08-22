@@ -87,10 +87,11 @@ python manage.py createsuperuser
 
 ## 🎥 Video de presentación
 
-*Pendiente de grabación y entrega.*
+Ingresa al siguiente link: 
+https://drive.google.com/drive/folders/1gT2wtBlg2JUoRStc7-FUruXRayOEbVDJ
 
 ---
 
 ## 👨🏻‍🎓 Autor
 
-Desarrollado por Omar Velásquez como proyecto final del curso de Python con Django.
+Desarrollado por Omar Velásquez como proyecto final del curso de Python de Coder House.

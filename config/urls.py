@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# Configuración de URLs del proyecto
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recetas.urls')),

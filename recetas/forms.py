@@ -2,6 +2,7 @@ from django import forms
 from .models import Receta, Perfil
 from django_countries.widgets import CountrySelectWidget
 
+# Formulario para crear o editar una receta
 class RecetaForm(forms.ModelForm):
     class Meta:
         model = Receta

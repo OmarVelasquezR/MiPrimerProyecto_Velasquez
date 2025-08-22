@@ -6,27 +6,27 @@
   <h2 class="mb-4">Mis recetas</h2>
 
   {% if recetas %}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      {% for receta in recetas %}
-        <div class="col">
-          <div class="card h-100 shadow-sm">
-            {% if receta.imagen %}
-              <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}">
-            {% endif %}
-            <div class="card-body">
-              <h5 class="card-title fw-bold">{{ receta.titulo }}</h5>
-              <p class="card-text"><i class="bi bi-person-circle me-1"></i> {{ receta.autor }}</p>
-              <p class="card-text">{{ receta.descripcion|truncatechars:100 }}</p>
-              <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-outline-primary btn-sm">Leer más</a>
-              <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-sm">Editar</a>
-              <a href="{% url 'eliminar_receta' receta.id %}" class="btn btn-danger btn-sm">Eliminar</a>
-            </div>
-          </div>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for receta in recetas %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        {% if receta.imagen %}
+        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title fw-bold">{{ receta.titulo }}</h5>
+          <p class="card-text"><i class="bi bi-person-circle me-1"></i> {{ receta.autor }}</p>
+          <p class="card-text">{{ receta.descripcion|truncatechars:100 }}</p>
+          <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-outline-primary btn-sm">Leer más</a>
+          <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-sm">Editar</a>
+          <a href="{% url 'eliminar_receta' receta.id %}" class="btn btn-danger btn-sm">Eliminar</a>
         </div>
-      {% endfor %}
+      </div>
     </div>
+    {% endfor %}
+  </div>
   {% else %}
-    <p class="text-muted">Aún no has creado ninguna receta.</p>
+  <p class="text-muted">Aún no has creado ninguna receta.</p>
   {% endif %}
 </div>
 {% endblock %}

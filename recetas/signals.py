@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from .models import Perfil
 
+# Crear perfil de usuario al registrarse
 @receiver(post_save, sender=User)
 def crear_o_actualizar_perfil_usuario(sender, instance, created, **kwargs):
     if created:

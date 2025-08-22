@@ -22,7 +22,7 @@ class ListaRecetasView(ListView):
     context_object_name = 'recetas'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().order_by('-fecha_creacion') 
         consulta = self.request.GET.get('q')
         if consulta:
             queryset = queryset.filter(titulo__icontains=consulta)

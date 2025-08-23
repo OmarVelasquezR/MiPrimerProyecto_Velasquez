@@ -5,16 +5,25 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login as auth_login
 
-# Vista de registro
+# Vista de registro de usuario
 def registro(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Guardar y loguear automáticamente
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = form.save()
+            user = authenticate(request, username=username, password=raw_password)
+            if user is not None:
+                auth_login(request, user)
+                return redirect('inicio')
             return redirect('login')
     else:
         form = RegistroUsuarioForm()
+    # Fallback si alguien entra por URL directa
     return render(request, 'cuentas/registro.html', {'form': form})
 
 # Vista de cierre de sesión

@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 # Configuración de URLs del proyecto
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recetas.urls')),
     path('cuentas/', include('cuentas.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='cuentas/login.html'), name='login'),
 ]
 
 # Mostrar imágenes en desarrollo

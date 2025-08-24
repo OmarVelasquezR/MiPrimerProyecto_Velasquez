@@ -14,12 +14,13 @@
 <body class="{% if request.resolver_match.url_name == 'inicio' %}inicio-page{% endif %}">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top premium-navbar">
         <div class="container">
-            <a class="navbar-brand text-gold fw-bold" href="{% url 'inicio' %}">Smart Food</a>
-
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'inicio' %}">
+                <img src="{% static 'images/icono.png' %}" alt="icono" class="logo-icon me-2">
+                <span class="text-gold fw-bold">Smart Food</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}">Inicio</a></li>
@@ -28,9 +29,13 @@
 
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            ¡Hola, {{ user.first_name|default:user.username }}!
+                            {% if user.perfil.avatar %}
+                            <img src="{{ user.perfil.avatar.url }}" alt="avatar" class="avatar-navbar">
+                            {% else %}
+                            <img src="{% static 'images/default-avatar.png' %}" alt="avatar" class="avatar-navbar">
+                            {% endif %}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{% url 'crear_receta' %}">Agregar receta</a></li>
@@ -39,20 +44,27 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+
+                            <!-- 🔴 Cerrar sesión con POST -->
+                            <li>
+                                <a href="#" class="dropdown-item logout text-danger"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Cerrar sesión
+                                </a>
+                                <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:none;">
+                                    {% csrf_token %}
+                                </form>
+                            </li>
                         </ul>
                     </li>
                     {% else %}
-                    <!-- Abrir modales en lugar de redirigir -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalLogin">
-                            Iniciar sesión
-                        </a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalLogin">Iniciar
+                            sesión</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalRegistro">
-                            Registrarse
-                        </a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal"
+                            data-bs-target="#modalRegistro">Registrarse</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -109,16 +121,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{% url 'login' %}">
+                    {% if login_form.errors %}
+                    <div class="alert alert-danger">{{ login_form.non_field_errors }}</div>
+                    {% endif %}
+                    <form method="post" action="{% url 'cuentas:login' %}">
                         {% csrf_token %}
-                        {{ login_form.non_field_errors }}
                         <div class="mb-3">
                             <label class="form-label" for="id_username">Nombre de usuario</label>
                             {{ login_form.username }}
+                            {{ login_form.username.errors }}
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="id_password">Contraseña</label>
                             {{ login_form.password }}
+                            {{ login_form.password.errors }}
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Ingresar</button>
                     </form>
@@ -142,9 +158,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{% url 'registro' %}">
+                    {% if registro_form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field in registro_form %}
+                        {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                        {% endfor %}
+                        {% for error in registro_form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <form method="post" action="{% url 'cuentas:registro' %}">
                         {% csrf_token %}
-                        {{ registro_form.non_field_errors }}
                         <div class="mb-3">
                             <label class="form-label" for="id_username">Nombre de usuario</label>
                             {{ registro_form.username }}
@@ -158,9 +185,6 @@
                         <div class="mb-3">
                             <label class="form-label" for="id_password1">Contraseña</label>
                             {{ registro_form.password1 }}
-                            <div class="form-text">
-                                Tu contraseña debe tener al menos 8 caracteres y no ser muy común.
-                            </div>
                             {{ registro_form.password1.errors }}
                         </div>
                         <div class="mb-3">
@@ -192,10 +216,24 @@
             }
         });
 
-        // Animación del navbar solo al recargar
         document.addEventListener("DOMContentLoaded", function () {
             document.body.classList.add("page-loaded");
         });
     </script>
+
+    {% if login_form.errors %}
+    <script>
+        var loginModal = new bootstrap.Modal(document.getElementById('modalLogin'));
+        loginModal.show();
+    </script>
+    {% endif %}
+
+    {% if registro_form.errors %}
+    <script>
+        var registroModal = new bootstrap.Modal(document.getElementById('modalRegistro'));
+        registroModal.show();
+    </script>
+    {% endif %}
 </body>
+
 </html>

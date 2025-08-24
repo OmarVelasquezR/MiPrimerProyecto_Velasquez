@@ -1,19 +1,33 @@
 {% extends 'recetas/base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
-<div class="auth-background">
-  <div class="auth-container">
-    <div class="auth-card shadow-lg p-4 rounded-3 bg-white">
-      <h2 class="text-center mb-4">Iniciar sesión</h2>
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success w-100">Ingresar</button>
-      </form>
-      <p class="text-center mt-3">
-        ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate</a>
-      </p>
+<div class="auth-background d-flex justify-content-center align-items-center" style="min-height:80vh;">
+  <div class="auth-card shadow-lg p-4 rounded-3 bg-white" style="max-width:420px; width:100%;">
+    <h2 class="text-center mb-4 text-gold fw-bold">Iniciar sesión</h2>
+
+    {% if form.errors %}
+    <div class="alert alert-danger">
+      Usuario o contraseña incorrectos. Intenta de nuevo.
     </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        {{ form.username|add_class:"form-control" }}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        {{ form.password|add_class:"form-control" }}
+      </div>
+      <button type="submit" class="btn btn-gold w-100">Ingresar</button>
+    </form>
+
+    <p class="text-center mt-3">
+      ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate</a>
+    </p>
   </div>
 </div>
 {% endblock %}

@@ -5,24 +5,46 @@
 {% block content %}
 
 <!-- HERO -->
-<section class="hero position-relative text-white text-center mb-5 w-100"style="background: url('{% static 'images/hero.jpg' %}') center/cover no-repeat; height: 400px;">
-    <div class="position-absolute top-50 start-50 translate-middle w-75">
-        <h1 class="display-4 fw-bold text-shadow">Descubre tu próxima receta saludable</h1>
-        <form method="get" action="{% url 'lista_recetas' %}" class="mt-4">
-            <div class="input-group input-group-lg">
-                <input type="text" name="q" class="form-control" placeholder="Buscar recetas..." aria-label="Buscar recetas">
-                <button class="btn btn-warning text-dark fw-bold" type="submit">Buscar</button>
-            </div>
-        </form>
+<section class="hero d-flex align-items-center justify-content-center text-white text-center">
+    <div class="overlay"></div>
+    <div class="hero-content animate-hero">
+        <h1 class="display-3 fw-bold text-shadow mb-3">
+            Sabores que inspiran
+        </h1>
+        <p class="lead hero-subtitle mb-4">
+            Descubre, crea y comparte las mejores recetas con nuestra comunidad culinaria
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 hero-buttons">
+            {% if user.is_authenticated %}
+            <a href="{% url 'crear_receta' %}" class="btn btn-gold btn-lg">Crear receta</a>
+            {% else %}
+            <a href="#" class="btn btn-gold btn-lg" data-bs-toggle="modal" data-bs-target="#modalLogin">Crear receta</a>
+            {% endif %}
+            <a href="{% url 'lista_recetas' %}" class="btn btn-outline-light btn-lg">Explorar recetas</a>
+        </div>
     </div>
 </section>
 
+<!-- BARRA DE BÚSQUEDA -->
+<section class="container mt-5 animate-fadeIn">
+    <form method="get" action="{% url 'lista_recetas' %}" class="search-bar">
+        <div class="input-group input-group-lg shadow">
+            <input type="text" name="q" class="form-control border-0 rounded-start"
+                placeholder="Buscar recetas...">
+            <button class="btn btn-gold fw-bold px-4" type="submit">Buscar</button>
+        </div>
+    </form>
+</section>
+
 <!-- ÚLTIMAS RECETAS -->
-<section class="container">
-    <h2 class="text-center mb-4 fw-bold text-dark">Últimas recetas añadidas</h2>
+<section class="container mt-5 animate-fadeIn">
+    <h2 class="text-center mb-5 fw-bold section-title animate-fadeInDown">
+        Últimas recetas añadidas
+    </h2>
     <div class="row g-4">
         {% for receta in recetas_recientes %}
-        <div class="col-md-4">
+        <div class="col-md-4 animate-fadeInUp">
             <a href="{% url 'detalle_receta' receta.id %}" class="text-decoration-none text-dark">
                 <div class="card h-100 shadow-sm receta-card transition-hover">
                     {% if receta.imagen %}

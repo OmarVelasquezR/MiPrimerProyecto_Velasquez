@@ -4,13 +4,8 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-
-# Formularios propios
 from .forms import RegistroUsuarioForm, LoginForm
-
-# Para armar el contexto de la portada al re-renderizar con errores
 from recetas.models import Receta
-
 
 def _inicio_contexto_base():
     """Contexto mínimo que tu portada usa (ajústalo si necesitas más)."""
@@ -18,7 +13,6 @@ def _inicio_contexto_base():
     return {
         "recetas_recientes": recetas_recientes,
     }
-
 
 def _render_inicio_con_form(request, *, login_form=None, registro_form=None, open_modal=None, status=200):
     """
@@ -29,7 +23,6 @@ def _render_inicio_con_form(request, *, login_form=None, registro_form=None, ope
     ctx.setdefault("registro_form", registro_form if registro_form is not None else RegistroUsuarioForm())
     ctx["open_modal"] = open_modal  # 'login' | 'registro' | None
     return render(request, "recetas/inicio.html", ctx, status=status)
-
 
 @require_POST
 def login_modal(request):
@@ -46,7 +39,6 @@ def login_modal(request):
         open_modal="login",
         status=400,
     )
-
 
 @require_POST
 def registro_modal(request):
@@ -68,11 +60,9 @@ def registro_modal(request):
         status=400,
     )
 
-
 def cerrar_sesion(request):
     logout(request)
     return redirect("inicio")
-
 
 class CambiarContrasenaView(LoginRequiredMixin, PasswordChangeView):
     template_name = "cuentas/cambiar_contrasena.html"

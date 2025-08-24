@@ -11,7 +11,7 @@ def inicio(request):
     recetas_recientes = Receta.objects.order_by('-fecha_creacion')[:6]
     return render(request, 'recetas/inicio.html', {'recetas_recientes': recetas_recientes})
 
-# Vista "About"
+# Vista About
 def acerca_de_mi(request):
     return render(request, 'recetas/about.html')
 

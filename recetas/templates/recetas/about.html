@@ -1,34 +1,97 @@
 {% extends 'recetas/base.html' %}
 {% load static %}
 
-{% block title %}Acerca de mí - Smart Food{% endblock %}
+{% block title %}Sobre nosotros - Smart Food{% endblock %}
 
 {% block content %}
-<section class="container py-5">
-    <div class="row align-items-center">
-        <div class="col-md-5 text-center mb-4 mb-md-0">
-            <img src="{% static 'images/about.jpg' %}" alt="Foto de Omar Velásquez"
-                class="img-fluid rounded-circle shadow" style="max-width: 250px;">
+
+<!-- HERO -->
+<section class="about-hero d-flex align-items-center justify-content-center text-white text-center animate-fadeIn">
+    <div class="overlay"></div>
+    <div class="container position-relative z-2">
+        <h1 class="display-3 fw-bold animate-fadeInDown">Sobre Smart Food</h1>
+        <p class="lead animate-fadeInDown">Nuestra historia, misión y visión para transformar la forma en que disfrutas
+            la
+            comida saludable.</p>
+    </div>
+</section>
+
+<!-- BIOGRAFIA -->
+<section class="container py-5 animate-fadeInUp">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg p-4 border-0 bg-light animate-fadeIn">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-4 text-center">
+                        <img src="{% static 'images/about.jpg' %}" alt="Foto"
+                            class="img-fluid rounded-circle border border-3 border-warning"
+                            style="width: 180px; height: 180px; object-fit: cover;">
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="fw-bold text-gold">👋 Hola, soy Omar Velásquez </h3>
+                        <p class="mt-3">
+                            Soy un apasionado del <strong>fitness</strong> y la <strong>alimentación saludable</strong>.
+                            Creé este
+                            blog para compartir recetas fáciles, nutritivas y deliciosas, perfectas para quienes quieren
+                            cuidarse
+                            sin complicarse en la cocina.
+                        </p>
+                        <p>
+                            En <strong>Smart Food</strong> creemos que comer sano no tiene por qué ser aburrido. Aquí
+                            encontrarás
+                            inspiración diaria, consejos prácticos y recetas reales, hechas lo mejor posible y propósito.
+                        </p>
+                        <p>
+                            Gracias por ser parte de esta comunidad. ¡Espero que este sitio te motive a cocinar mejor,
+                            vivir mejor y
+                            disfrutar cada bocado! 💪
+                        </p>
+                        <!-- Redes sociales -->
+                        <div class="d-flex gap-3 mt-3">
+                            <a href="#" class="btn btn-social instagram"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="btn btn-social facebook"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="btn btn-social tiktok"><i class="bi bi-tiktok"></i></a>
+                            <a href="#" class="btn btn-social whatsapp"><i class="bi bi-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-7">
-            <h2 class="fw-bold">Hola, soy Omar Velásquez 👋</h2>
-            <p class="mt-3">
-                Soy un apasionado del <strong>fitness</strong> y la <strong>alimentación saludable</strong>. Creé este
-                blog para compartir recetas fáciles, nutritivas y deliciosas, perfectas para quienes quieren cuidarse
-                sin complicarse en la cocina.
-            </p>
-            <p>
-                En <strong>Smart Food</strong> creemos que comer sano no tiene por qué ser aburrido. Aquí encontrarás
-                inspiración diaria, consejos prácticos y recetas reales, hechas con amor y propósito.
-            </p>
-            <p>
-                Gracias por ser parte de esta comunidad. ¡Espero que este sitio te motive a cocinar mejor, vivir mejor y
-                disfrutar cada bocado! 💪
-            </p>
-            <div class="mt-4">
-                <a href="https://www.instagram.com/tucuenta" class="btn btn-outline-dark btn-sm me-2"
-                    target="_blank">Instagram</a>
-                <a href="https://wa.me/57xxxxxxxxxx" class="btn btn-outline-success btn-sm" target="_blank">WhatsApp</a>
+    </div>
+</section>
+
+<!-- MISION / VISION / VALORES -->
+<section class="container py-5">
+    <h2 class="text-center mb-5 fw-bold section-title animate-fadeInDown">Misión, Visión y Valores</h2>
+    <div class="row text-center g-4">
+        <div class="col-md-4 animate-fadeInUp">
+            <div class="card h-100 shadow mission-card">
+                <div class="card-body">
+                    <i class="bi bi-bullseye text-gold fs-1 mb-3"></i>
+                    <h4 class="fw-bold">Misión</h4>
+                    <p>Promover hábitos de alimentación saludables mediante recetas creativas, accesibles y deliciosas
+                        para toda la familia.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 animate-fadeInUp">
+            <div class="card h-100 shadow mission-card">
+                <div class="card-body">
+                    <i class="bi bi-eye text-gold fs-1 mb-3"></i>
+                    <h4 class="fw-bold">Visión</h4>
+                    <p>Ser la plataforma líder en inspiración culinaria saludable, reconocida por su comunidad activa y
+                        contenido de calidad.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 animate-fadeInUp">
+            <div class="card h-100 shadow mission-card">
+                <div class="card-body">
+                    <i class="bi bi-heart text-gold fs-1 mb-3"></i>
+                    <h4 class="fw-bold">Valores</h4>
+                    <p>Pasión por la salud, innovación en cada receta, compromiso con nuestra comunidad y amor por lo
+                        que hacemos.</p>
+                </div>
             </div>
         </div>
     </div>

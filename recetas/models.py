@@ -24,6 +24,13 @@ class Receta(models.Model):
     def __str__(self):
         return self.titulo
 
+    # 🔹 Helpers para usar en plantillas
+    def categorias_list(self):
+        return self.categorias.split(",") if self.categorias else []
+
+    def alergias_list(self):
+        return self.alergias.split(",") if self.alergias else []
+
 # Clase para los perfiles de usuario
 class Perfil(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -91,7 +91,7 @@ def editar_receta(request, pk):
             receta.alergias = request.POST.get('alergias', '')
 
             receta.save()
-            return redirect('lista_recetas')
+            return redirect('mis_recetas')
     else:
         form = RecetaForm(instance=receta)
     return render(request, 'recetas/editar_receta.html', {'form': form, 'receta': receta})

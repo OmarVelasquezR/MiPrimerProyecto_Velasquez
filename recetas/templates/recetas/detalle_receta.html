@@ -1,33 +1,137 @@
 {% extends 'recetas/base.html' %}
+{% load static %}
 
-{% block title %}Detalle de receta{% endblock %}
+{% block title %}{{ receta.titulo }}{% endblock %}
 
 {% block content %}
-<div class="card mb-4">
-    {% if receta.imagen %}
-    <img src="{{ receta.imagen.url }}" class="card-img-top img-fluid rounded mb-3" alt="{{ receta.titulo }}"
-        style="max-height: 400px; object-fit: cover;">
-    {% endif %}
-    <div class="card-body">
-        <h2 class="card-title">{{ receta.titulo }}</h2>
-        <p class="text-muted mb-3">👨‍🍳 Publicado por: {{ receta.autor.get_full_name|default:receta.autor.username }}
-        </p>
-        <p><strong>Descripción:</strong> {{ receta.descripcion }}</p>
-        <p><strong>Ingredientes:</strong></p>
-        <ul>
-            {% for ingrediente in receta.ingredientes.splitlines %}
-            <li>{{ ingrediente }}</li>
-            {% endfor %}
-        </ul>
-        <p><strong>Instrucciones:</strong></p>
-        <ul>
-            {% for paso in receta.instrucciones.splitlines %}
-            {% if paso %}
-            <li><strong>Paso {{ forloop.counter }}:</strong> {{ paso }}</li>
+<div class="container py-4">
+    <!-- Botón volver -->
+    <a href="{% url 'lista_recetas' %}" class="btn btn-outline-secondary mb-3">← Volver</a>
+
+    <div class="row g-4">
+        <!-- Columna principal -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                {% if receta.imagen %}
+                <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}"
+                    style="object-fit: cover; max-height: 400px;">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title text-gold fw-bold">{{ receta.titulo }}</h2>
+                    <p class="text-muted">
+                        👨‍🍳 {{ receta.autor.get_full_name|default:receta.autor.username }} &nbsp; |
+                        ⏱ {{ receta.tiempo }} min &nbsp; |
+                        👥 {{ receta.porciones }} porciones &nbsp; |
+                        ⭐ {{ receta.dificultad }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold">Descripción</h5>
+                    <p>{{ receta.descripcion }}</p>
+                </div>
+            </div>
+
+            <!-- Ingredientes -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold">Ingredientes</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for ing in receta.ingredientes %}
+                        <li class="list-group-item">
+                            {{ forloop.counter }}. {{ ing.nombre }}
+                            {% if ing.cantidad %} - {{ ing.cantidad }}{% endif %}
+                            {% if ing.unidad %} {{ ing.unidad }}{% endif %}
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No se registraron ingredientes.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Instrucciones -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold">Instrucciones</h5>
+                    <ol class="list-group list-group-numbered">
+                        {% for paso in receta.instrucciones %}
+                        <li class="list-group-item">{{ paso }}</li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No se registraron instrucciones.</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Fotos adicionales -->
+            {% if receta.fotos_extra.all %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold">Más fotos</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for foto in receta.fotos_extra.all %}
+                        <img src="{{ foto.imagen.url }}" class="rounded"
+                            style="width:150px; height:150px; object-fit:cover;">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
             {% endif %}
-            {% endfor %}
-        </ul>
-        <p class="text-muted mt-4">🕒 Publicado el {{ receta.fecha_creacion|date:"d M Y H:i" }}</p>
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="col-lg-4">
+            <!-- Info rápida -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold">Información</h5>
+                    <p><strong>Categorías:</strong>
+                        {% if receta.categorias_list %}
+                        {% for cat in receta.categorias_list %}
+                        <span class="badge bg-dark text-white">{{ cat }}</span>
+                        {% endfor %}
+                        {% else %}
+                        <span class="text-muted">Ninguna</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Alergias:</strong>
+                        {% if receta.alergias_list %}
+                        {% for al in receta.alergias_list %}
+                        <span class="badge bg-danger">{{ al }}</span>
+                        {% endfor %}
+                        {% else %}
+                        <span class="text-muted">No registradas</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Dificultad:</strong> {{ receta.dificultad }}</p>
+                    <p><strong>Tiempo:</strong> {{ receta.tiempo }} min</p>
+                    <p><strong>Porciones:</strong> {{ receta.porciones }}</p>
+                </div>
+            </div>
+
+            <!-- Calificación -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold">Califica esta receta</h5>
+                    <div>
+                        ⭐ ⭐ ⭐ ⭐ ⭐
+                    </div>
+                </div>
+            </div>
+
+            <!-- Autor -->
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold">Autor</h5>
+                    <p>{{ receta.autor.get_full_name|default:receta.autor.username }}</p>
+                    <a href="#" class="btn btn-gold">Ver perfil</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

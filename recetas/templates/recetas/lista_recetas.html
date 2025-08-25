@@ -2,38 +2,108 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-4">
-    <h2 class="mb-4">Todas las recetas publicadas</h2>
-    <form method="get" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Buscar recetas por título..." value="{{ request.GET.q }}">
-        <button class="btn btn-dark" type="submit">Buscar</button>
-    </div>
+<div class="container py-5">
+
+    <!-- Título -->
+    <h2 class="text-center section-title mb-4 animate-fadeInDown">Explora todas las recetas</h2>
+
+    <!-- Barra de búsqueda y filtros -->
+    <form method="get" class="mb-5 animate-fadeInDown">
+        <div class="row g-2 justify-content-center">
+            <div class="col-md-4">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por título..."
+                    value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-2">
+                <select name="categoria" class="form-select">
+                    <option value="">Categoría</option>
+                    <option value="Desayunos">Desayunos</option>
+                    <option value="Almuerzos">Almuerzos</option>
+                    <option value="Cenas">Cenas</option>
+                    <option value="Postres">Postres</option>
+                    <option value="Bebidas">Bebidas</option>
+                    <option value="Vegetariano">Vegetariano</option>
+                    <option value="Vegano">Vegano</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="dificultad" class="form-select">
+                    <option value="">Dificultad</option>
+                    <option value="Fácil">Fácil</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Difícil">Difícil</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-gold w-100" type="submit">Filtrar</button>
+            </div>
+        </div>
     </form>
 
+    <!-- Lista de recetas -->
     {% if recetas %}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4 animate-fadeInUp">
         {% for receta in recetas %}
         <div class="col">
-            <a href="{% url 'detalle_receta' receta.id %}" class="card-link text-decoration-none">
-                <div class="card h-100 shadow-sm receta-card transition-hover">
+            <div class="card h-100 receta-card">
+
+                <!-- Imagen + Etiquetas + Botón corazón -->
+                <div class="position-relative">
                     {% if receta.imagen %}
-                    <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}">
+                    <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}"
+                        style="height:200px; object-fit:cover;">
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold text-dark">{{ receta.titulo }}</h5>
-                        <p class="card-text text-muted">
-                            🧑‍🍳 Publicado por: {{ receta.autor }}
-                        </p>
-                        <p class="card-text text-dark">{{ receta.descripcion|truncatechars:100 }}</p>
+
+                    <!-- Etiquetas -->
+                    <div class="position-absolute top-0 start-0 m-2 d-flex flex-wrap gap-1">
+                        {% for cat in receta.categorias_list %}
+                        <span class="badge bg-dark text-light small">{{ cat }}</span>
+                        {% endfor %}
+                        {% for al in receta.alergias_list %}
+                        <span class="badge bg-danger small">{{ al }}</span>
+                        {% endfor %}
                     </div>
+
+                    <!-- Botón favorito -->
+                    <button class="btn btn-light btn-sm btn-heart position-absolute bottom-0 end-0 m-2">
+                        <i class="bi bi-heart"></i>
+                    </button>
                 </div>
-            </a>
+
+                <!-- Cuerpo -->
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-dark">{{ receta.titulo }}</h5>
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-person-circle"></i> {{ receta.autor.username }}
+                        &nbsp; | &nbsp;
+                        <i class="bi bi-clock"></i> {{ receta.tiempo }} min
+                        &nbsp; | &nbsp;
+                        <i class="bi bi-people"></i> {{ receta.porciones }}
+                    </p>
+                    <p class="card-text text-dark">{{ receta.descripcion|truncatechars:90 }}</p>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                    <!-- Likes + Calificación -->
+                    <div class="d-flex align-items-center gap-3">
+                        <small class="text-muted"><i class="bi bi-heart-fill text-danger"></i> 12</small>
+                        <small class="text-muted"><i class="bi bi-star-fill text-warning"></i> 4.2</small>
+                    </div>
+
+                    <!-- Ver receta -->
+                    <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-gold px-4 py-2 fw-bold">
+                        Ver receta
+                    </a>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <p class="text-muted">No hay recetas publicadas aún.</p>
+    <div class="no-recetas-container">
+        <p class="text-center text-gold fw-bold py-5">No hay recetas publicadas aún. Sé el primero en crear una 💪.</p>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

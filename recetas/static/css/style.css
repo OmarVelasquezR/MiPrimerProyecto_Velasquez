@@ -671,3 +671,32 @@ body>footer {
     align-items: center;
     justify-content: center;
 }
+
+/* Botones de acción en Mis Recetas */
+.btn-edit, .btn-delete {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease;
+}
+
+.btn-edit {
+    background: #0d6efd;
+    color: #fff;
+}
+.btn-edit:hover {
+    background: #0b5ed7;
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: #fff;
+}
+.btn-delete:hover {
+    background: #bb2d3b;
+    transform: scale(1.1);
+}

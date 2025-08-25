@@ -2,31 +2,74 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-4">
-  <h2 class="mb-4">Mis recetas</h2>
+<div class="container py-5">
+    <h2 class="text-center section-title mb-4">Mis recetas</h2>
 
-  {% if recetas %}
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for receta in recetas %}
-    <div class="col">
-      <div class="card h-100 shadow-sm">
-        {% if receta.imagen %}
-        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title fw-bold">{{ receta.titulo }}</h5>
-          <p class="card-text"><i class="bi bi-person-circle me-1"></i> {{ receta.autor }}</p>
-          <p class="card-text">{{ receta.descripcion|truncatechars:100 }}</p>
-          <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-outline-primary btn-sm">Leer más</a>
-          <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-sm">Editar</a>
-          <a href="{% url 'eliminar_receta' receta.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+    {% if recetas %}
+    <div class="row row-cols-1 row-cols-md-3 g-4 animate-fadeInUp">
+        {% for receta in recetas %}
+        <div class="col">
+            <div class="card h-100 receta-card">
+
+                <!-- Imagen + Etiquetas -->
+                <div class="position-relative">
+                    {% if receta.imagen %}
+                    <img src="{{ receta.imagen.url }}" class="card-img-top" alt="Imagen de {{ receta.titulo }}"
+                        style="height:200px; object-fit:cover;">
+                    {% endif %}
+
+                    <div class="position-absolute top-0 start-0 m-2 d-flex flex-wrap gap-1">
+                        {% for cat in receta.categorias_list %}
+                        <span class="badge bg-dark text-light small">{{ cat }}</span>
+                        {% endfor %}
+                        {% for al in receta.alergias_list %}
+                        <span class="badge bg-danger small">{{ al }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Cuerpo -->
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-dark">{{ receta.titulo }}</h5>
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-clock"></i> {{ receta.tiempo }} min
+                        &nbsp; | &nbsp;
+                        <i class="bi bi-people"></i> {{ receta.porciones }}
+                    </p>
+                    <p class="card-text text-dark">{{ receta.descripcion|truncatechars:90 }}</p>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                    <!-- Likes + Calificación -->
+                    <div class="d-flex align-items-center gap-3">
+                        <small class="text-muted"><i class="bi bi-heart-fill text-danger"></i> 12</small>
+                        <small class="text-muted"><i class="bi bi-star-fill text-warning"></i> 4.2</small>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{% url 'editar_receta' receta.id %}" class="btn btn-sm btn-edit" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'eliminar_receta' receta.id %}" class="btn btn-sm btn-delete" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                        <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-gold px-4 py-2 fw-bold">
+                            Ver receta
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <p class="text-muted">Aún no has creado ninguna receta.</p>
-  {% endif %}
+    {% else %}
+    <div class="no-recetas-container">
+        <p class="text-center text-gold fw-bold py-5">
+            Aún no has creado ninguna receta. ¡Anímate a ser el primero! 🍳
+        </p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

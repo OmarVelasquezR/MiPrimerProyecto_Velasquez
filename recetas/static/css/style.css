@@ -394,6 +394,7 @@ body.inicio-page {
     height: 28px;
     transition: transform 0.6s ease;
 }
+
 .logo-icon:hover {
     transform: rotate(360deg);
 }
@@ -403,6 +404,7 @@ body.inicio-page {
     color: #dc3545 !important;
     font-weight: 600;
 }
+
 .dropdown-item.logout:hover {
     background: #dc3545;
     color: #fff !important;
@@ -422,11 +424,13 @@ body.inicio-page {
     background: url('../images/hero-about.png') center/cover no-repeat;
     height: 40vh;
 }
+
 .about-hero .overlay {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
 }
+
 .about-hero h1,
 .about-hero p {
     position: relative;
@@ -445,14 +449,27 @@ body.inicio-page {
     color: #fff;
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
 .btn-social:hover {
     transform: scale(1.1);
     opacity: 0.85;
 }
-.btn-social.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
-.btn-social.facebook { background: #1877f2; }
-.btn-social.tiktok { background: #000; }
-.btn-social.whatsapp { background: #25d366; }
+
+.btn-social.instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
+.btn-social.facebook {
+    background: #1877f2;
+}
+
+.btn-social.tiktok {
+    background: #000;
+}
+
+.btn-social.whatsapp {
+    background: #25d366;
+}
 
 /* Cards misión / visión / valores */
 .mission-card {
@@ -460,9 +477,10 @@ body.inicio-page {
     border-radius: 12px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .mission-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Ajustar espaciado inferior para que el footer no quede flotando */
@@ -471,8 +489,138 @@ body {
     display: flex;
     flex-direction: column;
 }
-body > footer {
+
+body>footer {
     margin-top: auto;
 }
 
+/* -------- Formulario CREAR RECETA -------- */
+.card form label {
+    color: #111
+}
 
+.card form input,
+.card form textarea,
+.card form select {
+    border-radius: 8px;
+    border: 1px solid #ccc
+}
+
+/* Inputs dinámicos efectos focus */
+#ingredientes-list input,
+#ingredientes-list select,
+#instrucciones-list input {
+    transition: all .25s ease;
+}
+
+#ingredientes-list input:focus,
+#ingredientes-list select:focus,
+#instrucciones-list input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 6px rgba(212, 175, 55, .6);
+}
+
+/* Fila ingrediente: nombre grande, cantidad corta, unidad corta */
+.ingredient-row .form-control[name="ingredientes[nombre][]"] {
+    flex: 1 1 auto;
+    min-width: 220px;
+}
+
+.ingredient-row .form-control[name="ingredientes[cantidad][]"] {
+    flex: 0 0 100px;
+    max-width: 100px;
+}
+
+.ingredient-row .form-select[name="ingredientes[unidad][]"] {
+    flex: 0 0 90px;
+    max-width: 90px;
+}
+
+/* Botón redondo para eliminar */
+.btn-icon {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px
+}
+
+/* Badge dorado para los pasos */
+.badge-gold,
+.badge.badge-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #111;
+    font-weight: 700;
+    border: none;
+}
+
+/* Previews con botón X */
+.preview-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.preview-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+}
+
+.remove-img {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 50%;
+    background: #dc3545;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+    z-index: 2;
+}
+
+.remove-img:hover {
+    background: #b02a37;
+    transform: scale(1.1);
+}
+
+/* Etiquetas */
+.tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    border: 2px solid #ccc;
+    color: #444;
+    transition: all .3s ease;
+}
+
+.tag:hover {
+    transform: scale(1.05);
+}
+
+.tag.selected {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border-color: var(--gold-dark);
+    color: #fff;
+}
+
+/* Separación entre contenedores de categorías y alergias */
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}

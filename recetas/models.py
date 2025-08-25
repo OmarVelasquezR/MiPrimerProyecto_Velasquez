@@ -7,13 +7,19 @@ from django_countries.fields import CountryField
 
 # Clase para las recetas
 class Receta(models.Model):
-    titulo = models.CharField(max_length=100)
+    titulo = models.CharField(max_length=200)
     descripcion = models.TextField()
-    ingredientes = models.TextField()
-    instrucciones = models.TextField()
+    ingredientes = models.JSONField(default=list)
+    instrucciones = models.JSONField(default=list)
     imagen = models.ImageField(upload_to='recetas/', blank=True, null=True)
-    fecha_creacion = models.DateTimeField(default=timezone.now)
-    autor = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    categorias = models.CharField(max_length=200, blank=True, null=True, help_text="Lista separada por comas")
+    alergias = models.CharField(max_length=200, blank=True, null=True, help_text="Lista separada por comas")
+    dificultad = models.CharField(max_length=20, choices=[('Fácil', 'Fácil'), ('Intermedio', 'Intermedio'), ('Difícil', 'Difícil')], default='Fácil')
+    tiempo = models.PositiveIntegerField(blank=True, null=True, help_text="Tiempo en minutos")
+    porciones = models.PositiveIntegerField(blank=True, null=True)
+    autor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recetas")
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.titulo

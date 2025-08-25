@@ -15,27 +15,29 @@
 
                     <!-- Título -->
                     <div class="mb-3">
-                        <label class="fw-bold">Título de la receta</label>
+                        <label class="fw-bold">Título de la receta*</label>
                         <input type="text" name="titulo" class="form-control"
-                            placeholder="Ej: Paella valenciana tradicional" required>
+                            placeholder="Ej: Paella valenciana tradicional..." required>
                     </div>
 
                     <!-- Descripción -->
                     <div class="mb-3">
-                        <label class="fw-bold">Descripción</label>
-                        <textarea name="descripcion" rows="4" class="form-control" required></textarea>
+                        <label class="fw-bold">Descripción*</label>
+                        <textarea name="descripcion" rows="4" class="form-control" required
+                            placeholder="Describe tu receta de manera atractiva..."></textarea>
                     </div>
 
                     <!-- Imagen principal -->
                     <div class="mb-4">
-                        <label class="fw-bold">Imagen principal</label>
-                        <input type="file" id="imagen_principal" name="imagen" accept="image/*" class="form-control">
+                        <label class="fw-bold">Imagen principal*</label>
+                        <input type="file" id="imagen_principal" name="imagen" accept="image/*" class="form-control"
+                            required>
                         <div id="preview_principal" class="preview mt-2"></div>
                     </div>
 
                     <!-- Más fotos -->
                     <div class="mb-4">
-                        <label class="fw-bold">Más fotos</label>
+                        <label class="fw-bold">Más fotos (Opcional)</label>
                         <input type="file" id="mas_fotos" name="fotos_extra" accept="image/*" multiple
                             class="form-control">
                         <div id="preview_fotos" class="preview d-flex gap-2 flex-wrap mt-2"></div>
@@ -44,7 +46,7 @@
                     <!-- Categorías y Alergias -->
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="fw-bold">Categorías</label>
+                            <label class="fw-bold">Categorías*</label>
                             <div id="categorias" class="tag-container">
                                 <span class="tag" data-value="Desayunos">Desayunos</span>
                                 <span class="tag" data-value="Almuerzos">Almuerzos</span>
@@ -54,11 +56,14 @@
                                 <span class="tag" data-value="Vegetariano">Vegetariano</span>
                                 <span class="tag" data-value="Vegano">Vegano</span>
                             </div>
-                            <input type="hidden" name="categorias" id="categorias_input">
+                            <input type="hidden" name="categorias" id="categorias_input" required>
+                            <div id="categoriasError" class="invalid-feedback" style="display:none;">
+                                Selecciona al menos una categoría.
+                            </div>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="fw-bold">Alergias alimentarias</label>
+                            <label class="fw-bold">Alergias alimentarias (Opcional)</label>
                             <div id="alergias" class="tag-container">
                                 <span class="tag" data-value="Leche">Leche</span>
                                 <span class="tag" data-value="Huevo">Huevo</span>
@@ -76,33 +81,36 @@
                     <!-- Dificultad / Tiempo / Porciones -->
                     <div class="row g-3 mb-3">
                         <div class="col-md-4">
-                            <label class="fw-bold">Dificultad</label>
-                            <select class="form-select" name="dificultad">
-                                <option>Fácil</option>
-                                <option>Intermedio</option>
-                                <option>Difícil</option>
+                            <label class="fw-bold">Dificultad*</label>
+                            <select class="form-select" name="dificultad" required>
+                                <option value="">Seleccione una dificultad</option>
+                                <option value="Fácil">Fácil</option>
+                                <option value="Intermedio">Intermedio</option>
+                                <option value="Difícil">Difícil</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="fw-bold">Tiempo (min)</label>
-                            <input type="number" min="1" name="tiempo" class="form-control" placeholder="ej: 45">
+                            <label class="fw-bold">Tiempo (min)*</label>
+                            <input type="number" min="1" name="tiempo" class="form-control" placeholder="Ej: 45"
+                                required>
                         </div>
                         <div class="col-md-4">
-                            <label class="fw-bold">Porciones</label>
-                            <input type="number" min="1" name="porciones" class="form-control" placeholder="ej: 4">
+                            <label class="fw-bold">Porciones*</label>
+                            <input type="number" min="1" name="porciones" class="form-control" placeholder="Ej: 4"
+                                required>
                         </div>
                     </div>
 
                     <!-- Ingredientes -->
                     <div class="mb-3">
-                        <label class="fw-bold d-block mb-2">Ingredientes</label>
+                        <label class="fw-bold d-block mb-2">Ingredientes*</label>
                         <div id="ingredientes-list"></div>
                         <button type="button" class="btn btn-gold mt-2" id="btnAddIng">Agregar ingrediente</button>
                     </div>
 
                     <!-- Instrucciones -->
                     <div class="mb-3">
-                        <label class="fw-bold d-block mb-2">Instrucciones</label>
+                        <label class="fw-bold d-block mb-2">Instrucciones*</label>
                         <div id="instrucciones-list"></div>
                         <button type="button" class="btn btn-gold mt-2" id="btnAddPaso">Agregar paso</button>
                     </div>
@@ -168,7 +176,7 @@
     function ingredienteRow(num) {
         return `<div class="ingredient-row d-flex align-items-center gap-2 mb-2">
     <span class="badge badge-gold ing-badge">${num}</span>
-    <input type="text" name="ingredientes[nombre][]" class="form-control" placeholder="Ingrediente">
+    <input type="text" name="ingredientes[nombre][]" class="form-control" placeholder="Ingrediente" required>
     <input type="number" name="ingredientes[cantidad][]" class="form-control" placeholder="Cant." min="0" step="any" required>
     <select name="ingredientes[unidad][]" class="form-select">
         <option>g</option><option>kg</option><option>ml</option><option>l</option>
@@ -186,7 +194,7 @@
     function pasoRow(num) {
         return `<div class="instruccion-row d-flex align-items-center gap-2 mb-2">
     <span class="badge badge-gold paso-badge">Paso ${num}</span>
-    <input type="text" name="instrucciones[]" class="form-control" placeholder="Describe el paso">
+    <input type="text" name="instrucciones[]" class="form-control" placeholder="Describe el paso..." required>
     <button type="button" class="btn btn-danger btn-icon remove-step">&times;</button>
     </div>`;
     }
@@ -221,5 +229,20 @@
             }
         });
     })();
+
+    // --- Validación del formulario ---
+    document.getElementById("recetaForm").addEventListener("submit", function (e) {
+        const categorias = document.getElementById("categorias_input").value.trim();
+        const categoriasError = document.getElementById("categoriasError");
+
+        if (!categorias) {
+            e.preventDefault(); // evita enviar el form
+            categoriasError.style.display = "block"; // muestra el mensaje en rojo
+            document.getElementById("categorias").classList.add("is-invalid"); // opcional para borde rojo
+        } else {
+            categoriasError.style.display = "none"; // oculta si ya es válido
+            document.getElementById("categorias").classList.remove("is-invalid");
+        }
+    });
 </script>
 {% endblock %}

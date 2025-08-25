@@ -1,54 +1,265 @@
 {% extends 'recetas/base.html' %}
 {% load static %}
-{% load widget_tweaks %}
 
 {% block title %}Editar receta{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4">Editar receta</h2>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <div class="card shadow-lg p-4 p-md-5 border-0 bg-light animate-fadeInUp">
+        <h2 class="text-center text-gold fw-bold mb-3">Editar receta</h2>
 
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+        <form method="POST" enctype="multipart/form-data" id="editarRecetaForm">
+          {% csrf_token %}
 
-    <div class="mb-4">
-      <h5 class="fw-bold">Título</h5>
-      {{ form.titulo|add_class:"form-control" }}
+          <!-- Título -->
+          <div class="mb-3">
+            <label class="fw-bold">Título</label>
+            <input type="text" name="titulo" value="{{ form.instance.titulo }}" class="form-control"
+              placeholder="Ej: Paella valenciana tradicional" required>
+          </div>
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label class="fw-bold">Descripción</label>
+            <textarea name="descripcion" rows="4" class="form-control"
+              required>{{ form.instance.descripcion }}</textarea>
+          </div>
+
+          <!-- Imagen principal -->
+          <div class="mb-4">
+            <label class="fw-bold">Imagen principal</label><br>
+            {% if form.instance.imagen %}
+            <div id="preview_principal" class="preview mt-2">
+              <div class="preview-wrapper">
+                <img src="{{ form.instance.imagen.url }}" class="preview-img">
+                <button type="button" class="remove-img">&times;</button>
+              </div>
+            </div>
+            {% else %}
+            <div id="preview_principal" class="preview mt-2"></div>
+            {% endif %}
+            <input type="file" id="imagen_principal" name="imagen" accept="image/*" class="form-control mt-2">
+          </div>
+
+          <!-- Más fotos -->
+          <div class="mb-4">
+            <label class="fw-bold">Más fotos</label>
+            <input type="file" id="mas_fotos" name="fotos_extra" accept="image/*" multiple class="form-control">
+            <div id="preview_fotos" class="preview d-flex gap-2 flex-wrap mt-2">
+              {% if form.instance.fotos_extra %}
+              {% for foto in form.instance.fotos_extra.all %}
+              <div class="preview-wrapper">
+                <img src="{{ foto.imagen.url }}" class="preview-img">
+                <button type="button" class="remove-img">&times;</button>
+              </div>
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Categorías y Alergias -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="fw-bold">Categorías</label>
+              <div id="categorias" class="tag-container">
+                {% for cat in "Desayunos,Almuerzos,Cenas,Postres,Bebidas,Vegetariano,Vegano".split(',') %}
+                <span class="tag {% if cat in form.instance.categorias %}selected{% endif %}" data-value="{{ cat }}">{{
+                  cat }}</span>
+                {% endfor %}
+              </div>
+              <input type="hidden" name="categorias" id="categorias_input" value="{{ form.instance.categorias }}">
+            </div>
+
+            <div class="col-md-6">
+              <label class="fw-bold">Alergias alimentarias</label>
+              <div id="alergias" class="tag-container">
+                {% for al in "Leche,Huevo,Maní,Frutos secos,Soja,Gluten,Pescado,Marisco".split(',') %}
+                <span class="tag {% if al in form.instance.alergias %}selected{% endif %}" data-value="{{ al }}">{{ al
+                  }}</span>
+                {% endfor %}
+              </div>
+              <input type="hidden" name="alergias" id="alergias_input" value="{{ form.instance.alergias }}">
+            </div>
+          </div>
+
+          <!-- Dificultad / Tiempo / Porciones -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="fw-bold">Dificultad</label>
+              <select class="form-select" name="dificultad">
+                <option {% if form.instance.dificultad=="Fácil" %}selected{% endif %}>Fácil</option>
+                <option {% if form.instance.dificultad=="Intermedio" %}selected{% endif %}>Intermedio</option>
+                <option {% if form.instance.dificultad=="Difícil" %}selected{% endif %}>Difícil</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-bold">Tiempo (min)</label>
+              <input type="number" min="1" name="tiempo" value="{{ form.instance.tiempo }}" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="fw-bold">Porciones</label>
+              <input type="number" min="1" name="porciones" value="{{ form.instance.porciones }}" class="form-control">
+            </div>
+          </div>
+
+          <!-- Ingredientes -->
+          <div class="mb-3">
+            <label class="fw-bold d-block mb-2">Ingredientes</label>
+            <div id="ingredientes-list">
+              {% for ing in form.instance.ingredientes %}
+              <div class="ingredient-row d-flex align-items-center gap-2 mb-2">
+                <span class="badge badge-gold ing-badge">{{ forloop.counter }}</span>
+                <input type="text" name="ingredientes[nombre][]" value="{{ ing.nombre }}" class="form-control"
+                  placeholder="Ingrediente">
+                <input type="number" name="ingredientes[cantidad][]" value="{{ ing.cantidad }}" class="form-control"
+                  placeholder="Cant.">
+                <select name="ingredientes[unidad][]" class="form-select">
+                  <option {% if ing.unidad=="g" %}selected{% endif %}>g</option>
+                  <option {% if ing.unidad=="kg" %}selected{% endif %}>kg</option>
+                  <option {% if ing.unidad=="ml" %}selected{% endif %}>ml</option>
+                  <option {% if ing.unidad=="l" %}selected{% endif %}>l</option>
+                  <option {% if ing.unidad=="taza" %}selected{% endif %}>taza</option>
+                  <option {% if ing.unidad=="cdita" %}selected{% endif %}>cdita</option>
+                  <option {% if ing.unidad=="cda" %}selected{% endif %}>cda</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-icon remove-ingredient">&times;</button>
+              </div>
+              {% endfor %}
+            </div>
+            <button type="button" class="btn btn-gold mt-2" id="btnAddIng">Agregar ingrediente</button>
+          </div>
+
+          <!-- Instrucciones -->
+          <div class="mb-3">
+            <label class="fw-bold d-block mb-2">Instrucciones</label>
+            <div id="instrucciones-list">
+              {% for paso in form.instance.instrucciones %}
+              <div class="instruccion-row d-flex align-items-center gap-2 mb-2">
+                <span class="badge badge-gold paso-badge">Paso {{ forloop.counter }}</span>
+                <input type="text" name="instrucciones[]" value="{{ paso }}" class="form-control">
+                <button type="button" class="btn btn-danger btn-icon remove-step">&times;</button>
+              </div>
+              {% endfor %}
+            </div>
+            <button type="button" class="btn btn-gold mt-2" id="btnAddPaso">Agregar paso</button>
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="submit" class="btn btn-gold px-5">Guardar cambios</button>
+            <a href="{% url 'lista_recetas' %}" class="btn btn-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
     </div>
-
-    <div class="mb-4">
-      <h5 class="fw-bold">Descripción</h5>
-      {{ form.descripcion|add_class:"form-control" }}
-      <small class="text-muted">Ejemplo: Delicioso pollo al horno con vegetales...</small>
-    </div>
-
-    <div class="mb-4">
-      <h5 class="fw-bold">Ingredientes</h5>
-      {{ form.ingredientes|add_class:"form-control" }}
-      <small class="text-muted">Escribe un ingrediente por línea (ej. Pollo, Tomate, Sal...)</small>
-    </div>
-
-    <div class="mb-4">
-      <h5 class="fw-bold">Instrucciones</h5>
-      {{ form.instrucciones|add_class:"form-control" }}
-      <small class="text-muted">Escribe una instrucción por línea</small>
-    </div>
-
-    <div class="mb-4">
-      <h5 class="fw-bold">Imagen actual:</h5>
-      {% if form.instance.imagen %}
-        <img src="{{ form.instance.imagen.url }}" alt="Imagen actual" class="img-thumbnail mb-3" style="max-width: 300px;">
-      {% else %}
-        <p class="text-muted">No hay imagen cargada.</p>
-      {% endif %}
-      <h5 class="fw-bold mt-3">Cambiar imagen</h5>
-      {{ form.imagen|add_class:"form-control" }}
-    </div>
-
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-primary">Guardar cambios</button>
-      <a href="{% url 'lista_recetas' %}" class="btn btn-secondary">Cancelar</a>
-    </div>
-  </form>
+  </div>
 </div>
+
+<script>
+  function createPreviewImg(file, container) {
+    const wrapper = document.createElement('div');
+    wrapper.className = "preview-wrapper";
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.className = "preview-img";
+    const btn = document.createElement('button');
+    btn.type = "button";
+    btn.className = "remove-img";
+    btn.innerHTML = "&times;";
+    btn.onclick = () => wrapper.remove();
+    wrapper.appendChild(img);
+    wrapper.appendChild(btn);
+    container.appendChild(wrapper);
+  }
+
+  // Imagen principal
+  document.getElementById('imagen_principal').addEventListener('change', e => {
+    const preview = document.getElementById('preview_principal');
+    preview.innerHTML = '';
+    const file = e.target.files[0];
+    if (file) createPreviewImg(file, preview);
+  });
+
+  // Más fotos
+  document.getElementById('mas_fotos').addEventListener('change', e => {
+    const preview = document.getElementById('preview_fotos');
+    preview.innerHTML = '';
+    [...e.target.files].forEach(file => createPreviewImg(file, preview));
+  });
+
+  // --- Tags seleccionables ---
+  function setupTags(containerId, inputId) {
+    const container = document.getElementById(containerId);
+    const input = document.getElementById(inputId);
+    container.addEventListener('click', e => {
+      if (e.target.classList.contains('tag')) {
+        e.target.classList.toggle('selected');
+        const values = [...container.querySelectorAll('.tag.selected')].map(tag => tag.dataset.value);
+        input.value = values.join(',');
+      }
+    });
+  }
+  setupTags('categorias', 'categorias_input');
+  setupTags('alergias', 'alergias_input');
+
+  // --- Ingredientes ---
+  function ingredienteRow(num) {
+    return `<div class="ingredient-row d-flex align-items-center gap-2 mb-2">
+    <span class="badge badge-gold ing-badge">${num}</span>
+    <input type="text" name="ingredientes[nombre][]" class="form-control" placeholder="Ingrediente">
+    <input type="number" name="ingredientes[cantidad][]" class="form-control" placeholder="Cant." min="0" step="any" required>
+    <select name="ingredientes[unidad][]" class="form-select">
+        <option>g</option><option>kg</option><option>ml</option><option>l</option>
+        <option>taza</option><option>cdita</option><option>cda</option>
+    </select>
+    <button type="button" class="btn btn-danger btn-icon remove-ingredient">&times;</button>
+    </div>`;
+  }
+  function renumerarIngredientes() {
+    document.querySelectorAll('#ingredientes-list .ing-badge')
+      .forEach((badge, i) => badge.textContent = i + 1);
+  }
+
+  // --- Instrucciones ---
+  function pasoRow(num) {
+    return `<div class="instruccion-row d-flex align-items-center gap-2 mb-2">
+    <span class="badge badge-gold paso-badge">Paso ${num}</span>
+    <input type="text" name="instrucciones[]" class="form-control" placeholder="Describe el paso">
+    <button type="button" class="btn btn-danger btn-icon remove-step">&times;</button>
+    </div>`;
+  }
+  function renumerarPasos() {
+    document.querySelectorAll('#instrucciones-list .paso-badge')
+      .forEach((badge, i) => badge.textContent = `Paso ${i + 1}`);
+  }
+
+  // --- Inicialización ---
+  (function init() {
+    const ingList = document.getElementById('ingredientes-list');
+    const pasosList = document.getElementById('instrucciones-list');
+
+    ingList.insertAdjacentHTML('beforeend', ingredienteRow(1));
+    pasosList.insertAdjacentHTML('beforeend', pasoRow(1));
+
+    document.getElementById('btnAddIng').addEventListener('click', () => {
+      ingList.insertAdjacentHTML('beforeend', ingredienteRow(ingList.children.length + 1));
+    });
+    document.getElementById('btnAddPaso').addEventListener('click', () => {
+      pasosList.insertAdjacentHTML('beforeend', pasoRow(pasosList.children.length + 1));
+    });
+
+    ingList.addEventListener('click', e => {
+      if (e.target.classList.contains('remove-ingredient')) {
+        e.target.closest('.ingredient-row').remove(); renumerarIngredientes();
+      }
+    });
+    pasosList.addEventListener('click', e => {
+      if (e.target.classList.contains('remove-step')) {
+        e.target.closest('.instruccion-row').remove(); renumerarPasos();
+      }
+    });
+  })();
+</script>
 {% endblock %}

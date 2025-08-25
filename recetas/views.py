@@ -4,11 +4,10 @@ from django.contrib.auth.decorators import login_required
 from .forms import RecetaForm, PerfilForm
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from recetas.models import Receta
 
 # Vista de inicio
 def inicio(request):
-    recetas_recientes = Receta.objects.order_by('-fecha_creacion')[:6]
+    recetas_recientes = Receta.objects.order_by('-creado')[:6]
     return render(request, 'recetas/inicio.html', {'recetas_recientes': recetas_recientes})
 
 # Vista About
@@ -22,7 +21,7 @@ class ListaRecetasView(ListView):
     context_object_name = 'recetas'
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-fecha_creacion') 
+        queryset = super().get_queryset().order_by('-creado')
         consulta = self.request.GET.get('q')
         if consulta:
             queryset = queryset.filter(titulo__icontains=consulta)
@@ -37,13 +36,39 @@ class DetalleRecetaView(DetailView):
 # Vista de creación de receta
 class CrearRecetaView(LoginRequiredMixin, CreateView):
     model = Receta
-    fields = ['titulo', 'descripcion', 'imagen', 'ingredientes', 'instrucciones']
+    form_class = RecetaForm
     template_name = 'recetas/crear_receta.html'
     success_url = '/recetas/'
 
-    def form_valid(self, form):
-        form.instance.autor = self.request.user
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        receta = Receta()
+        receta.autor = request.user
+        receta.titulo = request.POST.get('titulo')
+        receta.descripcion = request.POST.get('descripcion')
+        receta.dificultad = request.POST.get('dificultad')
+        receta.tiempo = request.POST.get('tiempo')
+        receta.porciones = request.POST.get('porciones')
+        receta.categorias = request.POST.get('categorias', '')
+        receta.alergias = request.POST.get('alergias', '')
+
+        if 'imagen' in request.FILES:
+            receta.imagen = request.FILES['imagen']
+
+        # Ingredientes dinámicos
+        nombres = request.POST.getlist('ingredientes[nombre][]')
+        cantidades = request.POST.getlist('ingredientes[cantidad][]')
+        unidades = request.POST.getlist('ingredientes[unidad][]')
+        receta.ingredientes = [
+            {"nombre": n, "cantidad": c, "unidad": u}
+            for n, c, u in zip(nombres, cantidades, unidades)
+            if n or c
+        ]
+
+        # Instrucciones dinámicas
+        receta.instrucciones = request.POST.getlist('instrucciones[]')
+
+        receta.save()
+        return redirect('lista_recetas')
 
 # Vista para editar receta
 @login_required
@@ -52,7 +77,20 @@ def editar_receta(request, pk):
     if request.method == 'POST':
         form = RecetaForm(request.POST, request.FILES, instance=receta)
         if form.is_valid():
-            form.save()
+            receta = form.save(commit=False)
+            nombres = request.POST.getlist('ingredientes[nombre][]')
+            cantidades = request.POST.getlist('ingredientes[cantidad][]')
+            unidades = request.POST.getlist('ingredientes[unidad][]')
+            receta.ingredientes = [
+                {"nombre": n, "cantidad": c, "unidad": u}
+                for n, c, u in zip(nombres, cantidades, unidades)
+                if n or c
+            ]
+            receta.instrucciones = request.POST.getlist('instrucciones[]')
+            receta.categorias = request.POST.get('categorias', '')
+            receta.alergias = request.POST.get('alergias', '')
+
+            receta.save()
             return redirect('lista_recetas')
     else:
         form = RecetaForm(instance=receta)
@@ -75,14 +113,13 @@ def perfil_usuario(request):
 # Vista de mis recetas
 @login_required
 def mis_recetas(request):
-    recetas_usuario = Receta.objects.filter(autor=request.user).order_by('-fecha_creacion')
+    recetas_usuario = Receta.objects.filter(autor=request.user).order_by('-creado')
     return render(request, 'recetas/mis_recetas.html', {'recetas': recetas_usuario})
 
 # Vista para editar perfil de usuario
 @login_required
 def editar_perfil(request):
     perfil = request.user.perfil
-
     if request.method == 'POST':
         form = PerfilForm(request.POST, request.FILES, instance=perfil)
         if form.is_valid():
@@ -90,5 +127,4 @@ def editar_perfil(request):
             return redirect('perfil')
     else:
         form = PerfilForm(instance=perfil)
-
     return render(request, 'recetas/editar_perfil.html', {'form': form})

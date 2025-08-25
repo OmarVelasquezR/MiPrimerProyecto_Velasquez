@@ -6,20 +6,18 @@ from django_countries.widgets import CountrySelectWidget
 class RecetaForm(forms.ModelForm):
     class Meta:
         model = Receta
-        fields = ['titulo', 'descripcion', 'ingredientes', 'instrucciones', 'imagen']
+        fields = [
+            'titulo', 'descripcion', 'imagen',
+            'categorias', 'alergias', 'dificultad',
+            'tiempo', 'porciones', 'ingredientes', 'instrucciones'
+        ]
         widgets = {
-            'descripcion': forms.Textarea(attrs={
-                'placeholder': 'Ejemplo: Delicioso pollo al horno con vegetales...',
-                'rows': 3
-            }),
-            'ingredientes': forms.Textarea(attrs={
-                'placeholder': 'Ejemplo:\nPollo\nTomate\nSal\nZanahoria',
-                'rows': 8
-            }),
-            'instrucciones': forms.Textarea(attrs={
-                'placeholder': 'Ejemplo:\nPreparar los ingredientes\nCocinar el pollo...',
-                'rows': 8
-            }),
+            'descripcion': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
+            'categorias': forms.TextInput(attrs={'class': 'form-control'}),
+            'alergias': forms.TextInput(attrs={'class': 'form-control'}),
+            'dificultad': forms.Select(attrs={'class': 'form-select'}),
+            'tiempo': forms.NumberInput(attrs={'class': 'form-control'}),
+            'porciones': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
 # Formulario para editar el perfil de usuario
